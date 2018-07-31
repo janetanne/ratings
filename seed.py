@@ -8,6 +8,8 @@ from model import User
 from model import connect_to_db, db
 from server import app
 
+from datetime import datetime
+
 
 def load_users():
     """Load users from u.user into database."""
@@ -36,6 +38,43 @@ def load_users():
 
 def load_movies():
     """Load movies from u.item into database."""
+
+    print("Movies")
+
+    Movie.query.delete()
+
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        row = row.split("|")
+        row = row[:5]
+        row.remove('')
+
+        movie_id, title, released_at, imdb_url = row
+
+        # removing year from title - the elegant way :)
+        # title = re.sub(r'\([^)]*\)', '', title)
+        # title.rstrip()
+
+        # removes year from end of title
+        title_list = title.split(" ")
+        title_list.pop()
+        title = " ".join(title_list)
+
+        # turns date string into date object
+        if released_at:
+            released_at = datetime.strptime(released_at, '%d-%b-%Y')
+
+        else:
+            released_at = None
+
+        movie = Movie(movie_id=movie_id,
+                      title=title,
+                      released_at=released_at,
+                      imdb_url=imdb_url)
+
+        db.session.add(movie)
+
+    db.session.commit()
 
 
 def load_ratings():
