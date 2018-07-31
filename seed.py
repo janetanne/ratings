@@ -44,8 +44,7 @@ def load_movies():
     Movie.query.delete()
 
     for row in open("seed_data/u.item"):
-        row = row.rstrip()
-        row = row.split("|")
+        row = row.rstrip().split("|")
         row = row[:5]
         row.remove('')
 
@@ -85,8 +84,12 @@ def load_ratings():
     Rating.query.delete()
 
     for row in open("seed_data/u.data"):
-        row = row.rstrip()
-        row = row.split("\t")
+        # row = row.rstrip()
+        # row = row.split("\t")
+        
+        # you can chain strip & split!
+        row = row.rstrip().split("\t")
+
         row.pop()
 
         user_id, movie_id, score = row
@@ -98,7 +101,7 @@ def load_ratings():
         db.session.add(rating)
 
     db.session.commit()
-    
+
 
 def set_val_user_id():
     """Set value for the next user_id after seeding database"""
