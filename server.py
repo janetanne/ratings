@@ -35,6 +35,34 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
+@app.route("/register", methods=["GET"])
+def show_register_form():
+	"""Shows registration form for new users."""
+
+	return render_template("register_form.html")
+
+
+@app.route("/register", methods=["POST"])
+def processes_new_user():
+	"""Checks to see if a user with that email address exists. 
+	If not, creates new user in database."""
+
+	user_email = request.form.get("email")
+	password = request.form.get("password")
+	age = request.form.get("age")
+	zipcode = request.form.get("zipcode")
+	# check_email = db.session.query(User).filter(User.email == user_email).first()
+	check_email = User.query.filter(User.email==user_email)
+	check_email = check_email.first()
+	# check_email = True when there's a record. 
+
+	if not check_email:
+		new_user = User(email=user_email, password=password,
+						age=int(age), zipcode=zipcode)
+		db.session.add(new_user)
+		db.session.commit()
+
+	return redirect("/")
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
