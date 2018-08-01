@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request,flash, session)
+from flask import (Flask, render_template, redirect, request, flash, session)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -47,11 +47,13 @@ def processes_new_user():
 	"""Checks to see if a user with that email address exists. 
 	If not, creates new user in database."""
 
+	# gets data from form
 	user_email = request.form.get("email")
 	password = request.form.get("password")
 	age = request.form.get("age")
 	zipcode = request.form.get("zipcode")
-	# check_email = db.session.query(User).filter(User.email == user_email).first()
+
+	# query the db for user email
 	check_email = User.query.filter(User.email==user_email)
 	check_email = check_email.first()
 	# check_email = True when there's a record. 
@@ -70,20 +72,37 @@ def show_login_form():
 
 	return render_template("login_form.html")
 
-# WORK ON BELOW!!
-# @app.route("/login", methods=["POST"])
-# def logs_in_user():
-# 	"""Checks for email and password in database, then logs in if they match."""
 
-# 	email = request.form.get("email")
-# 	password = request.form.get("password")
+@app.route("/login", methods=["POST"])
+def logs_in_user():
+	"""Checks for email and password in database, then logs in if they match."""
 
-# 	check_email = db.session.query(User).filter(User.email == user_email)
-# 	check_email = check_email.first()
+	# gets email and password from form
+	email = request.form.get("email")
+	password = request.form.get("password")
 
-# 	print("\n\n\n\nTHIS IS CHECK EMAIL: {}\n\n\n\n".format(check_email))
+	# query db for user email
+	check_email = User.query.filter(User.email==email) # REMINDER TO CHECK YOUR VARIABLES
+	check_email = check_email.first()
 
-# 	return redirect("/")
+	# check if email is in db
+	if check_email:
+		check_email_and_pw = User.query.filter(User.email==email, User.password==password)
+		check_email_and_pw = check_email_and_pw.first()
+
+		if check_email_and_pw:
+			print("if statement true")
+			session["current_user"] = email
+			print("USER IS LOGGED IN!")
+			flash("Logged in as %s" % email)
+			return redirect("/")
+
+
+
+
+
+
+	return redirect("/")
 
 
 if __name__ == "__main__":
