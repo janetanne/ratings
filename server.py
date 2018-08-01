@@ -64,6 +64,28 @@ def processes_new_user():
 
 	return redirect("/")
 
+@app.route("/login", methods=["GET"])
+def show_login_form():
+	"""Shows login form for new users."""
+
+	return render_template("login_form.html")
+
+# WORK ON BELOW!!
+# @app.route("/login", methods=["POST"])
+# def logs_in_user():
+# 	"""Checks for email and password in database, then logs in if they match."""
+
+# 	email = request.form.get("email")
+# 	password = request.form.get("password")
+
+# 	check_email = db.session.query(User).filter(User.email == user_email)
+# 	check_email = check_email.first()
+
+# 	print("\n\n\n\nTHIS IS CHECK EMAIL: {}\n\n\n\n".format(check_email))
+
+# 	return redirect("/")
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
