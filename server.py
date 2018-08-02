@@ -43,7 +43,7 @@ def show_register_form():
 
 
 @app.route("/register", methods=["POST"])
-def processes_new_user():
+def process_new_user():
 	"""Checks to see if a user with that email address exists. 
 	If not, creates new user in database."""
 
@@ -74,7 +74,7 @@ def show_login_form():
 
 
 @app.route("/login", methods=["POST"])
-def logs_in_user():
+def log_in_user():
 	"""Checks for email and password in database, then logs in if they match."""
 
 	# gets email and password from form
@@ -91,16 +91,18 @@ def logs_in_user():
 		check_email_and_pw = check_email_and_pw.first()
 
 		if check_email_and_pw:
-			print("if statement true")
 			session["current_user"] = email
-			print("USER IS LOGGED IN!")
 			flash("Logged in as %s" % email)
 			return redirect("/")
 
+	return redirect("/")
 
+@app.route("/logout", methods=["GET"])
+def log_out_user():
+	"""Logs out user."""
 
-
-
+	session.clear()
+	flash("You have been logged out!")
 
 	return redirect("/")
 
