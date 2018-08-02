@@ -121,15 +121,17 @@ def log_out_user():
 @app.route("/users/<user_id>")
 def get_user_details(user_id):
 	"""Gets and shows details about user."""
-	
-	email = request.args.get("email")
-	current_user = User.query.filter(User.email==email).first()
 
+	current_user = User.query.filter(User.user_id==user_id).first()
+
+	# getting list of rows from Ratings db based on user_id
+	ratings_list = Rating.query.filter(User.user_id==user_id).all()
 
 	return render_template("user_details.html",
-							email=email, age=current_user.age,
-							zipcode=current_user.zipcode)
-
+							email=current_user.email,
+							age=current_user.age,
+							zipcode=current_user.zipcode,
+							movie_list=ratings_list)
 
 
 if __name__ == "__main__":

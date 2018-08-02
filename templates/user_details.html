@@ -9,8 +9,9 @@
 </ul>
 
 <h2>Movies Rated</h2>
-<ul>
-	<li>HOLD</li>
+<ul>{% for rating in movie_list %}
+	<li>{{ rating.movie.title }}: {{ rating.score }}</li>
+	{% endfor %}
 </ul>
 
 {% endblock %}
