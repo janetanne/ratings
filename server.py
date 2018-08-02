@@ -63,8 +63,13 @@ def process_new_user():
 						age=int(age), zipcode=zipcode)
 		db.session.add(new_user)
 		db.session.commit()
+		flash("You're now registered! Please log in.")
+		return redirect("/login")
 
-	return redirect("/")
+	else:
+		flash("You've already registered before. Log in.")
+		return redirect("/login")
+
 
 @app.route("/login", methods=["GET"])
 def show_login_form():
@@ -95,7 +100,14 @@ def log_in_user():
 			flash("Logged in as %s" % email)
 			return redirect("/")
 
-	return redirect("/")
+		else:
+			flash("Wrong password! Try again.")
+			return render_template("login_form.html")
+
+	else:
+		flash("Your email is not registered. Please register here!")
+		return redirect("/register")
+
 
 @app.route("/logout", methods=["GET"])
 def log_out_user():
@@ -105,6 +117,8 @@ def log_out_user():
 	flash("You have been logged out!")
 
 	return redirect("/")
+
+# @app.route("/users/<")
 
 
 if __name__ == "__main__":
