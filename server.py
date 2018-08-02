@@ -118,7 +118,18 @@ def log_out_user():
 
 	return redirect("/")
 
-# @app.route("/users/<")
+@app.route("/users/<user_id>")
+def get_user_details(user_id):
+	"""Gets and shows details about user."""
+	
+	email = request.args.get("email")
+	current_user = User.query.filter(User.email==email).first()
+
+
+	return render_template("user_details.html",
+							email=email, age=current_user.age,
+							zipcode=current_user.zipcode)
+
 
 
 if __name__ == "__main__":
